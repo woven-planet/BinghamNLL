@@ -11,7 +11,7 @@ authors: *Hiroya Sato, Takuya Ikeda, and Koichi Nishiwaki*
 git clone https://github.com/woven-planet/BinghamNLL.git
 cd BinghamNLL
 git submodule update --init --recursive
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -90,7 +90,7 @@ A part of the work is the result of Summer Internship Program.
 
 *Hiroya Sato* is with Department of Mechano-Informatics, Graduate School of Information Science and Technology, The University of Tokyo.
 
-*Takuya Ikeda* and *Koichi Nishiwaki* are with the Woven By Toyota, Inc.
+*Takuya Ikeda* and *Koichi Nishiwaki* are with the Woven by Toyota, Inc.
 
 ## Acknowledgement
 
