@@ -1,0 +1,6 @@
+[submodule "third-party/brotlearn/bingham-rotation-learning"]
+	path = third-party/brotlearn/bingham-rotation-learning
+	url = https://github.com/utiasSTARS/bingham-rotation-learning
+[submodule "third-party/liegroups"]
+	path = third-party/liegroups
+	url = https://github.com/utiasSTARS/liegroups
