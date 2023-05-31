@@ -6,9 +6,9 @@ The repository contains the implementation of Bingham distribution's Negative Lo
 
 Our paper is accepted by *2023 IEEE International Conference on Robotics and Automation (ICRA)* under the title "**A Probabilistic Rotation Representation for Symmetric Shapes With an Efficiently Computable Bingham Loss Function**", by *Hiroya Sato, Takuya Ikeda, and Koichi Nishiwaki*.
 
-The video and paper are available: 
-YouTube: https://www.youtube.com/watch?v=UQEEdeevpDo
-arXiv: http://arxiv.org/abs/2305.18947
+The paper and video are available: 
+- arXiv: http://arxiv.org/abs/2305.18947
+- YouTube: https://www.youtube.com/watch?v=UQEEdeevpDo
 
 If you use our BinghamNLL in your work, please cite as follows:
 <pre>
