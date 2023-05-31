@@ -1,12 +1,27 @@
 # BinghamNLL
 
+## Overview
+
 The repository contains the implementation of Bingham distribution's Negative Log-Likelihood(NLL) loss function.
 
-arXiv paper: https://arxiv.org/abs/2203.04456
+Our paper is accepted by *2023 IEEE International Conference on Robotics and Automation (ICRA)* under the title "**A Probabilistic Rotation Representation for Symmetric Shapes With an Efficiently Computable Bingham Loss Function**", by *Hiroya Sato, Takuya Ikeda, and Koichi Nishiwaki*.
 
-Also, a further improved paper is accepted by 2023 IEEE International Conference on Robotics and Automation (ICRA) under the tile "**A Probabilistic Rotation Representation for Symmetric Shapes With an Efficiently Computable Bingham Loss Function**".
+The paper and video are available: 
+- arXiv: http://arxiv.org/abs/2305.18947
+- YouTube: https://www.youtube.com/watch?v=UQEEdeevpDo
 
-authors: *Hiroya Sato, Takuya Ikeda, and Koichi Nishiwaki*
+If you use our BinghamNLL in your work, please cite as follows:
+<pre>
+@inproceedings{hiroya_binghamnll_2023,
+   author={Hiroya Sato and Takuya Ikeda and Koichi Nishiwaki},
+   title={{A Probabilistic Rotation Representation for Symmetric Shapes With an Efficiently Computable Bingham Loss Function}},
+   booktitle={{2023 International Conference on Robotics and Automation (ICRA)}},
+   year={2023},
+   month={May},
+   pages={6923-6929},
+}
+</pre>
+
 ## How to install
 
 ```bash
