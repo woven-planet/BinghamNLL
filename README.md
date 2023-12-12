@@ -34,6 +34,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 pip install -r requirements.cpu.txt
 pip install -r requirements.submodule.txt
+pip install -e .
 ```
 
 If you'd like to use GPU, please modify `requirements.gpu.txt` based on your environment.
