@@ -44,7 +44,7 @@ def figure_to_image(fig):
     return fig_np
 
 
-def draw_bingham_3d(bdistr, quat_gt, num_samples=500, probability=0.7):
+def draw_bingham_3d(bdistr, quat_gt, num_samples=500, probability=0.7, **kwargs_to_drawSO3):
     """Draw samples from a Bingham distribution
     and return an image object.
 
@@ -60,7 +60,7 @@ def draw_bingham_3d(bdistr, quat_gt, num_samples=500, probability=0.7):
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111, projection="3d")
 
-    draw_bingham_distribution(ax, bdistr, quat_gt, num_samples, probability)
+    draw_bingham_distribution(ax, bdistr, quat_gt, num_samples, probability, **kwargs_to_drawSO3)
 
     fig_np = figure_to_image(fig)
     plt.close(fig)
@@ -68,7 +68,7 @@ def draw_bingham_3d(bdistr, quat_gt, num_samples=500, probability=0.7):
     return fig_np
 
 
-def draw_bingham_distribution(ax, bdistr, quat_gt, num_samples=500, probability=0.7):
+def draw_bingham_distribution(ax, bdistr, quat_gt, num_samples=500, probability=0.7, **kwargs_to_drawSO3):
     """Draw samples from a Bingham distribution
 
     Args:
@@ -97,7 +97,7 @@ def draw_bingham_distribution(ax, bdistr, quat_gt, num_samples=500, probability=
         axes_gt = quaternion.as_rotation_matrix(quaternion.as_quat_array(quat_gt))
     else:
         axes_gt = None
-    draw_so3s(ax, rotations, axes, axes_gt)
+    draw_so3s(ax, rotations, axes, axes_gt, **kwargs_to_drawSO3)
 
 
 def make_sphere():
@@ -118,7 +118,8 @@ def make_sphere():
     return x, y, z
 
 
-def draw_so3s(ax, rotations, axes=None, axes_gt=None):
+def draw_so3s(ax, rotations, axes=None, axes_gt=None,
+              distance=9, point_of_view=np.array([0., 0., -1.]), xaxis_direction='right', **kwargs):
     """Draw 3D points for the tips of x, y, z axes over the given rotations.
     Optionally, a coordinate system can be drew by providing @p axes.
 
@@ -133,8 +134,20 @@ def draw_so3s(ax, rotations, axes=None, axes_gt=None):
             represents x, y, z axis of a 3D coordinate system respectively.
         axes_gt (numpy.array):
             Ground truth rotation, as same type as axes
+        distance (float):
+            A distance value from the origin (0,0,0) to the camera.
+            This value is used in the 3D plot.
+        point_of_view (numpy.array):
+            A vector of the view point coordinates.
+            The viewer camera is placed at the coordinates
+            specified by `point_of_view` and looks at the origin.
+        xaxis_direction (str):
+            An x-axis direction in the screen
+            (chosen from ['left', 'right', 'up', 'down']).
+            The x-axis may not be uniquely directed depending on
+            the `point_of_view`, in which case the x-axis is oriented
+            in the direction specified by `xaxis_direction`.
     """
-    point_of_view = np.array([0, 0, -1])
     ax.grid(False)
     ax.set_box_aspect((1, 1, 1))
 
@@ -149,6 +162,25 @@ def draw_so3s(ax, rotations, axes=None, axes_gt=None):
         xs = rotations[:, :, 0]
         ys = rotations[:, :, 1]
         zs = rotations[:, :, 2]
+
+    def calc_viewangle(point_of_view, xaxis_direction):
+        """
+        xaxis_direction is used if azim_rad becomes undefined (both p[0] and p[1] are zero.)
+        """
+        if not xaxis_direction in ['left', 'right', 'up', 'down']:
+            raise ValueError("Invalid xaxis_direction \"{}\" is given.".format(xaxis_direction))
+        
+        p = point_of_view / np.linalg.norm(point_of_view)
+        
+        if np.isclose(p[2], +1.0):
+            azim_rad = {'down': 0., 'left': 90., 'up': 180., 'right': -90.}[xaxis_direction] * np.pi / 180
+        elif np.isclose(p[2], -1.0):
+            azim_rad = {'up': 0., 'left': 90., 'down': 180., 'right': -90.}[xaxis_direction] * np.pi / 180
+        else:
+            azim_rad = np.arctan2(p[1], p[0])
+        elev_rad = np.arcsin(p[2])
+
+        return {'azim': azim_rad * 180 / np.pi, 'elev': elev_rad * 180 / np.pi}
 
     def plot_scatter(data, color, label, alpha=0.3):
         ax.scatter(
@@ -207,7 +239,7 @@ def draw_so3s(ax, rotations, axes=None, axes_gt=None):
         """
         The axes should be drawn from the back to the front,
         i.e., in the order of how far the tip of the axis is
-        from the viewpoint (1,-1,1) \in R^3.
+        from the `point_of_view` \in R^3.
         """
         dist_from_axistip_to_viewpoint = np.linalg.norm(axes - point_of_view.reshape(-1, 1), axis=0)
 
@@ -233,10 +265,12 @@ def draw_so3s(ax, rotations, axes=None, axes_gt=None):
             zs[np.logical_not(zs_isback)], front_colors[2], label="z-axis", alpha=front_alpha
         )
 
-    # TODO: calc azim and elev from point_of_view
-    ax.dist = 9
-    ax.azim = -90
-    ax.elev = -90
+    # calc azim and elev from point_of_view
+    viewangles = calc_viewangle(point_of_view, xaxis_direction)
+    ax.dist = distance
+    ax.azim = viewangles['azim']
+    ax.elev = viewangles['elev']
+
     ax.legend(loc="upper left")
     for set_ticks in (ax.set_xticks, ax.set_yticks, ax.set_zticks):
         set_ticks([-1.0, 0.0, 1.0])
